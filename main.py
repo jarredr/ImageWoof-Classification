@@ -20,6 +20,9 @@ imagenet_classes = {
         'n02086240': 'Shih-Tzu'
     }
 
+num_classes = 10
+img_dim = 224
+
 
 def data_loader(base_path, for_sklearn=False):
     """Loads the train and test sets of the Imagewoof dataset
@@ -54,7 +57,7 @@ def data_loader(base_path, for_sklearn=False):
         Returns:
             A numpy array of pixel values representing the image
         """
-        img = image.load_img(image_path, grayscale=False, target_size=(224, 224))
+        img = image.load_img(image_path, grayscale=False, target_size=(img_dim, img_dim))
         x = image.img_to_array(img, dtype='float32')
         return x
 
@@ -69,7 +72,8 @@ def data_loader(base_path, for_sklearn=False):
         """
         x = []
         y = []
-        for breed in breed_paths:
+        for i in range(num_classes):
+            breed = breed_paths[i]
             breed_class = breed[-9:]
             image_paths = glob.glob(breed + '/*')
             for image_path in image_paths:
@@ -120,7 +124,7 @@ def logistic_regression(x_train, y_train, x_test, y_test):
 
 def cnn(x_train, y_train, x_test, y_test):
     cnn_model = Sequential()
-    cnn_model.add(ZeroPadding2D((1, 1), input_shape=(224, 224, 3)))
+    cnn_model.add(ZeroPadding2D((1, 1), input_shape=(img_dim, img_dim, 3)))
     cnn_model.add(Convolution2D(32, (3, 3), activation='relu'))
     cnn_model.add(ZeroPadding2D((1, 1)))
     cnn_model.add(Convolution2D(32, (3, 3), activation='relu'))
@@ -136,7 +140,7 @@ def cnn(x_train, y_train, x_test, y_test):
     cnn_model.add(Flatten())
     cnn_model.add(Dense(128, activation='relu'))
     cnn_model.add(Dropout(0.5))
-    cnn_model.add(Dense(10, activation='softmax'))
+    cnn_model.add(Dense(num_classes, activation='softmax'))
 
     cnn_model.compile(loss='categorical_crossentropy',
                       optimizer=keras.optimizers.Adam(),
