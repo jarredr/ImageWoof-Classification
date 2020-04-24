@@ -20,7 +20,8 @@ imagenet_classes = {
         'n02086240': 'Shih-Tzu'
     }
 
-num_classes = 10
+epochs = 10
+num_classes = 4
 img_dim = 224
 
 
@@ -147,7 +148,7 @@ def cnn(x_train, y_train, x_test, y_test):
                       metrics=['accuracy']
                       )
 
-    cnn_model.fit(x_train, y_train, epochs=25, batch_size=256)
+    cnn_model.fit(x_train, y_train, epochs=epochs, batch_size=256)
     score = cnn_model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
