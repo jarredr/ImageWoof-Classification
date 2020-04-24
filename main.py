@@ -145,8 +145,8 @@ def cnn(x_train, y_train, x_test, y_test):
 
     cnn_model.fit(x_train, y_train, epochs=10, batch_size=256)
     score = cnn_model.evaluate(x_test, y_test, verbose=0)
-    print('Validation loss:', score[0])
-    print('Validation accuracy:', score[1])
+    print('Test loss:', score[0])
+    print('Test accuracy:', score[1])
 
 
 def main():
