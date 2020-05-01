@@ -23,8 +23,8 @@ imagenet_classes = {
     }
 
 epochs = 10
-num_classes = 10
-img_dim = 224
+num_classes = 4
+img_dim = 48
 
 
 def data_loader(base_path, for_sklearn=False):
