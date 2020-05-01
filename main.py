@@ -1,11 +1,13 @@
 import glob
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, LabelEncoder
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, SGDClassifier
 import keras
 from keras.layers import Dropout, Flatten, Convolution2D, ZeroPadding2D, MaxPooling2D, Dense
 from keras.models import Sequential
 from keras.preprocessing import image
+from PIL import Image
+
 
 imagenet_classes = {
         'n02115641': 'Dingo',
@@ -21,7 +23,7 @@ imagenet_classes = {
     }
 
 epochs = 10
-num_classes = 4
+num_classes = 10
 img_dim = 224
 
 
@@ -43,7 +45,7 @@ def data_loader(base_path, for_sklearn=False):
             data: A multi-dimensional numpy array of image pixels to be flattened
 
         Returns:
-
+            Data reshaped into one dimension
         """
         samples, dim1, dim2, alpha = data.shape
         data = data.reshape(samples, dim1 * dim2 * alpha)
@@ -114,13 +116,47 @@ def get_class(prediction, classes):
     return imagenet_classes[classes[np.argmax(prediction)]]
 
 
-def logistic_regression(x_train, y_train, x_test, y_test):
-    model = LogisticRegression()
-    print('Fitting logistic regression model...')
+def class_distribution(labels, classes):
+    """Prints the distribution of classes in a dataset
+
+    Args:
+        labels: the true labels for the data
+        classes: the classes from the encoder
+
+    Returns:
+        Nothing
+    """
+    label_counts = {}
+    for label in labels:
+        class_name = get_class(label, classes)
+        if class_name in label_counts:
+            label_counts[class_name] += 1
+        else:
+            label_counts[class_name] = 1
+
+    for dog_breed, count in enumerate(label_counts):
+        print(f'{dog_breed}: {count}')
+
+
+def evaluate_model(model, x_train, y_train, x_test, y_test):
+    """Trains a model and prints the train and test accuracy.
+
+    Args:
+        model: an sklearn model to be trained and evaluated
+        x_train: train set of images
+        y_train: labels of train set
+        x_test: test set of images
+        y_test: labels of test set
+
+    Returns:
+        The trained model
+    """
+    print('Training model...')
     model.fit(x_train, y_train)
-    print('Evaluating logistic regression model')
+    print('Evaluating model...')
     print(f'Train accuracy: {model.score(x_train, y_train)}')
     print(f'Test accuracy: {model.score(x_test, y_test)}')
+    return model
 
 
 def cnn(x_train, y_train, x_test, y_test):
@@ -157,8 +193,18 @@ def cnn(x_train, y_train, x_test, y_test):
 def main():
     # x_train, y_train, x_test, y_test, encoder_classes = data_loader('./data/imagewoof', for_sklearn=True)
     # logistic_regression(x_train, y_train, x_test, y_test)
-    x_train, y_train, x_test, y_test, encoder_classes = data_loader('./data/imagewoof')
-    cnn(x_train, y_train, x_test, y_test)
+    # x_train, y_train, x_test, y_test, encoder_classes = data_loader('./data/imagewoof')
+    # class_distribution(y_train, encoder_classes)
+    # cnn(x_train, y_train, x_test, y_test)
+    sx_train, sy_train, sx_test, sy_test, encoder_classes = data_loader('./data/imagewoof', for_sklearn=True)
+
+    print('Logistic Regression:')
+    lr_model = LogisticRegression(max_iter=100)
+    evaluate_model(lr_model, sx_train, sy_train, sx_test, sy_test)
+
+    print('SVM:')
+    svm_model = SGDClassifier()
+    evaluate_model(svm_model, sx_train, sy_train, sx_test, sy_test)
 
 
 if __name__ == '__main__':
