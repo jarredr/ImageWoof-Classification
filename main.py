@@ -30,7 +30,8 @@ def data_loader(base_path, for_sklearn, img_dim, num_classes):
     Args:
         base_path: A string providing the base path for the dataset
         for_sklearn: A boolean for whether to format the data for sklearn models
-
+        img_dim: Number of dimensions in the image
+        num_classes: The number of classes (breeds) to use
     Returns:
         Numpy arrays for the train and test sets plus the classes of the label encoder
     """
@@ -320,8 +321,7 @@ def resnet50(x_train, y_train, x_test, y_test, epochs, img_dim, num_classes):
     print(model.summary())
     model.fit(x_train, y_train,
               batch_size=128,
-              epochs=epochs,
-              validation_data=(x_test, y_test))
+              epochs=epochs)
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
