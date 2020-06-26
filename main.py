@@ -362,7 +362,7 @@ def main():
     elif args.model_name == 'large_cnn':
         large_cnn(x_train, y_train, x_test, y_test, epochs=args.epochs, img_dim=img_dim, num_classes=args.classes)
     elif args.model_name == 'vgg_face':
-        if args.data_tye == 'small':
+        if args.data_type == 'small':
             raise ValueError('Only large data is accepted in VGG_Face')
         vgg_face(x_train, y_train, x_test, y_test, epochs=args.epochs, num_classes=args.classes)
     elif args.model_name == 'resnet50':
