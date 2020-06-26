@@ -318,7 +318,6 @@ def resnet50(x_train, y_train, x_test, y_test, epochs, img_dim, num_classes):
     model.compile(loss='categorical_crossentropy',
                   optimizer='adam',
                   metrics=['accuracy'])
-    print(model.summary())
     model.fit(x_train, y_train,
               batch_size=128,
               epochs=epochs)
