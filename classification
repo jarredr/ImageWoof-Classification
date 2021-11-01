@@ -4,8 +4,8 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# COMP7220 Individual Project\n",
-    "*By Jarred Reilly (43264204)*  \n",
+    "# Image Classification using Machine Learning\n",
+    "*By JarredR*  \n",
     "This project will use the [ImageWoof dataset](https://github.com/fastai/imagenette#imagewoof), which is made up of 12,000 images of dogs divided into 10 classes (breeds). The goal is to classify images of dogs into the correct class with the accuracy metric being the measure of performance. To achieve this goal, a variety of conventional machine learning and deep learning techniques will be compared. The same techniques from this project were used in the major project, which instead used the CelebA dataset and the classfication task was hair colour prediction. The results will be compared this project and the major project throughout this notebook, particually in the discussion section.\n",
     "\n",
     "\n",
